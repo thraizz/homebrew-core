@@ -13,7 +13,8 @@ class BareosFd < Formula
   def install
     system "./configure", "--prefix=#{prefix}",
     "--prefix=#{prefix}",
-    "--with-archivedir=#{prefix}/var/bareos",
+    "--with-working-dir=#{var}/lib/bareos",
+    "--with-archivedir=#{var}/bareos",
     "--with-configtemplatedir=#{lib}/bareos/defaultconfigs",
     "--with-scriptdir=#{lib}/bareos/scripts",
     "--with-plugindir=#{lib}/bareos/plugins",
@@ -63,8 +64,8 @@ class BareosFd < Formula
   EOS
   end
 
- # test do
- #   output = shell_output "sudo lsof -n -iTCP:9102 | grep LISTEN"
- #   assert_match "Bareos is listening under:", output
- # end
+  #test do
+  #  output = shell_output "sudo lsof -n -iTCP:9102 | grep LISTEN"
+  #  assert_match "Bareos is listening under:", output
+  #end
 end
