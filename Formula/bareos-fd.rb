@@ -6,11 +6,12 @@ class BareosFd < Formula
 
   depends_on "readline"
   depends_on "openssl"
-  depends_on "python"
+  depends_on :python => :build
 
   def install
-    system "./configure", "--prefix=#{prefix}",
+    system "./configure",
     "--prefix=#{prefix}",
+    "--sbindir=#{bin}",
     "--with-working-dir=#{var}/lib/bareos",
     "--with-archivedir=#{var}/bareos",
     "--with-confdir=#{etc}/bareos",
@@ -30,36 +31,40 @@ class BareosFd < Formula
   end
 
   def post_install
+    # The default configuration files are deployed and can be tested in the test-do block.
     system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bareos-fd || true ")
     system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bconsole || true ")
   end
 
   plist_options :startup => true
 
-  def plist; <<-EOS.undent
+  def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
-    <dict>
-            <key>Label</key>
-            <string>#{plist_name}</string>
-            <key>ProgramArguments</key>
-            <array>
-                    <string>#{sbin}/bareos-fd</string>
-                    <string>-f</string>
-            </array>
-            <key>StandardOutPath</key>
-            <string>#{var}/run/bareos-fd.log</string>
-            <key>StandardErrorPath</key>
-            <string>#{var}/run/bareos.log</string>
-            <key>RunAtLoad</key>
-            <true/>
-    </dict>
+      <dict>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{bin}/bareos-fd</string>
+          <string>-f</string>
+        </array>
+        <key>StandardOutPath</key>
+        <string>#{var}/run/bareos-fd.log</string>
+        <key>StandardErrorPath</key>
+        <string>#{var}/run/bareos.log</string>
+        <key>RunAtLoad</key>
+        <true/>
+      </dict>
     </plist>
   EOS
   end
 
   test do
-    shell_output("#{sbin}/bareos-fd -t 2>&1")
+    # First test checks the version,
+    assert_match version.to_s, shell_output("#{bin}/bareos-fd -? 2>&1", 1)
+    # Second test checks the configuration files.
+    system "#{bin}/bareos-fd -t" 
   end
 end
