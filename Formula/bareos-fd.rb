@@ -1,8 +1,8 @@
 class BareosFd < Formula
   desc "Open-Source Data Protection Solution"
   homepage "https://bareos.org"
-  url "https://github.com/bareos/bareos/archive/Release/16.2.7.tar.gz"
-  sha256 "0b8dbe2e17b3eda470c30d4fe6af92e6f7b668fd1cfc1b045becdc8c8b6a767f"
+  url "https://github.com/bareos/bareos/archive/Release/17.2.4.tar.gz"
+  sha256 "4c443539012cf5ebb0fdb18878e604e82b951e6429c618acd18762f3c5724799"
 
   depends_on "readline"
   depends_on "openssl"
@@ -22,10 +22,11 @@ class BareosFd < Formula
     "--with-mon-fd-password=XXX_REPLACE_WITH_CLIENT_MONITOR_PASSWORD_XXX",
     "--with-basename=XXX_REPLACE_WITH_LOCAL_HOSTNAME_XXX",
     "--with-hostname=XXX_REPLACE_WITH_LOCAL_HOSTNAME_XXX",
-    "--with-python",
     "--enable-client-only"
 
     system "make"
+    # * Makefile is intended to create a .pkg file.
+    #   As it is obsolete it gets removed.
     rm "platforms/osx/Makefile"
     system "make", "install"
   end
@@ -47,7 +48,7 @@ class BareosFd < Formula
         <string>#{plist_name}</string>
         <key>ProgramArguments</key>
         <array>
-          <string>#{bin}/bareos-fd</string>
+          <string>#{opt_bin}/bareos-fd</string>
           <string>-f</string>
         </array>
         <key>StandardOutPath</key>
