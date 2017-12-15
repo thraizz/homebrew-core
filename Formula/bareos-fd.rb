@@ -6,7 +6,6 @@ class BareosFd < Formula
 
   depends_on "readline"
   depends_on "openssl"
-  depends_on :python => :build
 
   def install
     system "./configure",
@@ -22,11 +21,12 @@ class BareosFd < Formula
     "--with-mon-fd-password=XXX_REPLACE_WITH_CLIENT_MONITOR_PASSWORD_XXX",
     "--with-basename=XXX_REPLACE_WITH_LOCAL_HOSTNAME_XXX",
     "--with-hostname=XXX_REPLACE_WITH_LOCAL_HOSTNAME_XXX",
+    "--with-python",
     "--enable-client-only"
 
     system "make"
     # * Makefile is intended to create a .pkg file.
-    #   As it is obsolete it gets removed.
+    #   As it is not required or used it's removed.
     rm "platforms/osx/Makefile"
     system "make", "install"
   end
