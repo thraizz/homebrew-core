@@ -66,6 +66,6 @@ class BareosFd < Formula
     # First test checks the version,
     assert_match version.to_s, shell_output("#{bin}/bareos-fd -? 2>&1", 1)
     # Second test checks the configuration files.
-    system "#{bin}/bareos-fd -t" 
+    system "#{bin}/bareos-fd", "-t"
   end
 end
