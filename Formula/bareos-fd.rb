@@ -33,8 +33,8 @@ class BareosFd < Formula
 
   def post_install
     # The default configuration files are deployed and can be tested in the test-do block.
-    system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bareos-fd || true ")
-    system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bconsole || true ")
+    return if File.exist?(etc/"bareos/bareos-fd")
+    cp_r Dir[lib/"bareos/defaultconfigs/*"], etc/"bareos", :preserve => true
   end
 
   plist_options :startup => true
@@ -63,9 +63,8 @@ class BareosFd < Formula
   end
 
   test do
-    # First test checks the version,
+    # Checks version and tests configuration
     assert_match version.to_s, shell_output("#{bin}/bareos-fd -? 2>&1", 1)
-    # Second test checks the configuration files.
     system "#{bin}/bareos-fd", "-t"
   end
 end
