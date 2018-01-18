@@ -33,7 +33,7 @@ class BareosFd < Formula
 
   def post_install
     # The default configuration files are deployed and can be tested in the test-do block.
-    unless(File.exist?(etc/"bareos/bareos-fd.d"))
+    unless File.exist?(etc/"bareos/bareos-fd.d")
       system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bareos-fd")
       system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bconsole")
     end
