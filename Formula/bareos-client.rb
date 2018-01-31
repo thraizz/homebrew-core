@@ -51,7 +51,7 @@ class BareosClient < Formula
         <string>#{plist_name}</string>
         <key>ProgramArguments</key>
         <array>
-          <string>#{opt_bin}/bareos-fd</string>
+          <string>#{opt_sbin}/bareos-fd</string>
           <string>-f</string>
         </array>
         <key>StandardOutPath</key>
@@ -67,8 +67,8 @@ class BareosClient < Formula
 
   test do
     # Check if bareos-fd starts at all.
-    assert_match version.to_s, shell_output("#{bin}/bareos-fd -? 2>&1", 1)
+    assert_match version.to_s, shell_output("#{sbin}/bareos-fd -? 2>&1", 1)
     # Check if the configuration is valid.
-    system "#{bin}/bareos-fd", "-t"
+    system "#{sbin}/bareos-fd", "-t"
   end
 end
