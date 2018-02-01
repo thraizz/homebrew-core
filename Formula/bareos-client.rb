@@ -22,21 +22,23 @@ class BareosClient < Formula
                           "--with-python",
                           "--enable-client-only"
 
-    system "make"
     # The file platforms/osx/Makefile is intended for other environment (not homebrew)
     # and would break the build process.
     # Therefore it is removed until this has been fixed upstream,
     # see https://bugs.bareos.org/view.php?id=900
     rm "platforms/osx/Makefile"
+
     system "make", "install"
   end
 
   def post_install
     # If no configuration files are present,
     # deploy them (copy them and replace variables).
-    unless File.exist?("#{etc}/bareos/bareos-fd.d")
-      system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bareos-fd")
-      system("#{lib}/bareos/scripts/bareos-config deploy_config #{lib}/bareos/defaultconfigs #{etc}/bareos bconsole")
+    unless (etc/"bareos/bareos-fd.d").exist?
+      system lib/"bareos/scripts/bareos-config", "deploy_config",
+             lib/"bareos/defaultconfigs", etc/"bareos", "bareos-fd"
+      system lib/"bareos/scripts/bareos-config", "deploy_config",
+             lib/"bareos/defaultconfigs", etc/"bareos", "bconsole"
     end
   end
 
